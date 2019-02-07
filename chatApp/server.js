@@ -2,6 +2,9 @@ const express = require('express');
 const parser = require('body-parser');
 
 const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+
 
 // Instanciate middleware
 app.use(parser.json());
@@ -28,6 +31,11 @@ app.post('/messages', (req, res) => {
     res.sendStatus(200);
 })
 
-const server = app.listen(port, () => console.log(`server started on port ${port}`, server.address().port)
+io.on('connection', socket => {
+    console.log('user connected');
+    
+})
+
+const server = http.listen(port, () => console.log(`server started on port ${port}`, server.address().port)
 );
 
