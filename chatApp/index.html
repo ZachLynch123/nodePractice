@@ -18,10 +18,20 @@
             <br>
             <input type="text" class="form-control" placeholder="name">
             <br>
-            <button class="btn btn-success">Send</button>
+            <button class="btn btn-success" id="send">Send</button>
         </div>
         <div id="messages"></div>
     </div>
+    <script>
+        $(() => {
+            $("#send").click(() => {
+                addMessages({name: 'Tim', message: 'Hello world!'});
+            });
+        });
+        let addMessages = message => {
+            $("#messages").append(`<h4> ${message.name} </h4> ${message.message}`);
+        }
+    </script>
     
 </body>
 </html>
