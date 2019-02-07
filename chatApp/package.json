@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express.js": "^1.0.0"
+    "express.js": "^1.0.0",
+    "nodemon": "^1.18.9"
   }
 }
