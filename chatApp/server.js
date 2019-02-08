@@ -1,5 +1,6 @@
 const express = require('express');
 const parser = require('body-parser');
+const mongoose = require('mongoose');
 
 const app = express();
 const http = require('http').Server(app);
@@ -11,6 +12,15 @@ app.use(parser.json());
 app.use(parser.urlencoded({extended: false}))
 
 const port = process.env.PORT || 5000;
+
+const db = require('./keys').mongoURI;
+
+
+mongoose
+.connect(db, { useNewUrlParser: true })
+.then(() => { console.log('MongoDB connected..');})
+.catch(e => {console.log(e);
+})
 
 // Statically serving data
 app.use(express.static(__dirname));
