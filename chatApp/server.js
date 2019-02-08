@@ -6,6 +6,7 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
+const Message = require('./model/messages')
 
 // Instanciate middleware
 app.use(parser.json());
@@ -36,10 +37,16 @@ app.get('/messages', (req, res) => {
 })
 
 // Post Request
-app.post('/messages', (req, res) => {    
-    messages.push(req.body);
-    io.emit('message', req.body);
-    res.sendStatus(200);
+app.post('/messages', (req, res) => { 
+    const message = new Message(req.body);
+    message.save(err => {
+        if (err){
+            sendStatus(500);
+        }
+        messages.push(req.body);
+        io.emit('message', req.body);
+        res.sendStatus(200);
+    }) 
 })
 
 io.on('connection', socket => {
