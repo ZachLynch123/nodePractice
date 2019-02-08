@@ -26,14 +26,12 @@ mongoose
 // Statically serving data
 app.use(express.static(__dirname));
 
-let messages = [
-    {name: "Tim", message: "hello!"},
-    {name: "Alli", message: "hello world!!"},
-]
-
 // Get request
 app.get('/messages', (req, res) => {
-    res.send(messages)
+    Message.find({}).then ((messages, err) => {
+        console.log(messages, "From get request");
+        res.send(messages);
+    });
 })
 
 // Post Request
@@ -43,7 +41,6 @@ app.post('/messages', (req, res) => {
         if (err){
             sendStatus(500);
         }
-        messages.push(req.body);
         io.emit('message', req.body);
         res.sendStatus(200);
     }) 
