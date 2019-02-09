@@ -41,27 +41,29 @@ app.post('/messages', (req, res) => {
     const message = new Message(req.body);
     message.save()
     .then(() => {
-        Message.findOne({message: 'badword'}, (err, censored) => {
-            if (censored) {
-                console.log('bad word found ', censored);
-                Message.deleteOne({_id: censored.id}, err => {
-                    console.log('removed message');  
-                })
-            }
-        })
+        console.log('saved');
+        return Message.findOne({message: 'badword'})})
+    .then( censored => {
+        if(censored) {
+            console.log('bad word found ', censored);
+            return Message.deleteOne({ _id: censored.id})
+        }
         io.emit('message', req.body);
         res.sendStatus(200);
+        
     })
-    .catch(err => {
+    .catch(e => {
         res.sendStatus(500)
-        return console.error(err);
+        return console.error(e);
+
     })
-})
+});
 
 io.on('connection', socket => {
     console.log('user connected');
-    
 })
+
+
 
 const server = http.listen(port, () => console.log(`server started on port ${port}`, server.address().port)
 );
