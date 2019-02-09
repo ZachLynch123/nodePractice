@@ -16,5 +16,8 @@
     "mongoose": "^5.4.10",
     "nodemon": "^1.18.9",
     "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "jasmine": "^3.3.1"
   }
 }
