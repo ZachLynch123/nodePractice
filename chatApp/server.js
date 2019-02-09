@@ -6,7 +6,9 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-const Message = require('./model/messages')
+const Message = require('./model/messages');
+
+mongoose.Promise = Promise;
 
 // Instanciate middleware
 app.use(parser.json());
@@ -37,13 +39,23 @@ app.get('/messages', (req, res) => {
 // Post Request
 app.post('/messages', (req, res) => { 
     const message = new Message(req.body);
-    message.save(err => {
-        if (err){
-            sendStatus(500);
-        }
+    message.save()
+    .then(() => {
+        Message.findOne({message: 'badword'}, (err, censored) => {
+            if (censored) {
+                console.log('bad word found ', censored);
+                Message.deleteOne({_id: censored.id}, err => {
+                    console.log('removed message');  
+                })
+            }
+        })
         io.emit('message', req.body);
         res.sendStatus(200);
-    }) 
+    })
+    .catch(err => {
+        res.sendStatus(500)
+        return console.error(err);
+    })
 })
 
 io.on('connection', socket => {
