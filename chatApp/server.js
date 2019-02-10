@@ -38,9 +38,8 @@ app.get('/messages', (req, res) => {
 
 // Post Request
 app.post('/messages', async (req, res) => { 
+    // catch any errors and throw a 500 status
     try {
-        
-    
     const message = new Message(req.body);
     const savedMessage = await message.save();
     console.log('saved');
@@ -59,10 +58,7 @@ app.post('/messages', async (req, res) => {
     } catch (e) {
         res.sendStatus(500)
         return console.error(e);
-    }
-
-        
-    });
+    }});
 
 io.on('connection', socket => {
     console.log('user connected');
